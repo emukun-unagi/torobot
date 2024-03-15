@@ -1,71 +1,83 @@
 const { EmbedBuilder, PermissionsBitField, ActionRowBuilder, ButtonBuilder, ButtonStyle } = require("discord.js");
 const { SlashCommandBuilder } = require("@discordjs/builders");
 
-const imageUrls = [
-    "https://cdn.discordapp.com/attachments/1210452036865499219/1218106273229439006/IMG_7693.webp?ex=660674de&is=65f3ffde&hm=ad26c02b570e0dea17911e7f1f3d2873615e6dad9fc65ee460e5f0020841b8ac&",
-    "https://cdn.discordapp.com/attachments/1210452036865499219/1218106274701643837/IMG_7691.png?ex=660674df&is=65f3ffdf&hm=4451e4c241aaea944db89ce143ca915c2d745c642216926d2ca63a7dc43ebd9f&",
-    // Add more URLs as needed
+const images = [
+    "https://example.com/image1.png",
+    "https://example.com/image2.png"
 ];
+
+const rows = [];
+
+for (let i = 0; i < images.length; i++) {
+    const row = new ActionRowBuilder()
+        .addComponents(
+            new ButtonBuilder()
+                .setCustomId(`prev-${i}`)
+                .setLabel("⬅️")
+                .setStyle(ButtonStyle.Secondary)
+                .setDisabled(i === 0),
+
+            new ButtonBuilder()
+                .setCustomId(`next-${i}`)
+                .setLabel("➡️")
+                .setStyle(ButtonStyle.Secondary)
+                .setDisabled(i === images.length - 1)
+        );
+
+    rows.push(row);
+}
 
 exports.commandBase = {
     prefixData: {
         name: "ouki",
+        aliases: []
     },
     slashData: new SlashCommandBuilder()
         .setName("ouki")
-        .setDescription("Display images with buttons.")
-        .addStringOption(option =>
-            option.setName("page")
-                .setDescription("The page number of the image.")
-                .setRequired(true)
-                .setChoices(
-                    { name: "1", value: "1" },
-                    { name: "2", value: "2" },
-                    // Add more choices as needed
-                )
-        ),
+        .setDescription("Oukis!"),
     cooldown: 5000,
     ownerOnly: false,
     slashRun: async (client, interaction) => {
-        const page = interaction.options.getString("page");
+        const index = parseInt(interaction.options.get("index")?.value || "0");
+
         const embed = new EmbedBuilder()
             .setColor(0x0099FF)
-            .setImage(imageUrls[page - 1]);
+            .setImage(images[index])
+            .setTimestamp()
+            .setFooter({ text: `Page ${index + 1}`, iconURL: interaction.user.displayAvatarURL() });
 
-        const row = new ActionRowBuilder()
-            .addComponents(
-                new ButtonBuilder()
-                    .setCustomId("previous")
-                    .setEmoji("⬅️")
-                    .setStyle(ButtonStyle.Primary)
-                    .setDisabled(page === "1"),
-                new ButtonBuilder()
-                    .setCustomId("next")
-                    .setEmoji("➡️")
-                    .setStyle(ButtonStyle.Primary)
-                    .setDisabled(page === imageUrls.length.toString()),
-            );
+        await interaction.reply({ embeds: [embed], components: [rows[index]] });
 
-        await interaction.reply({ embeds: [embed], components: [row] });
+        const filter = (i) => i.user.id === interaction.user.id;
 
-        const collector = interaction.channel.createMessageComponentCollector({ componentType: "BUTTON" });
+        const collector = interaction.channel.createMessageComponentCollector({ filter, time: 60000 });
 
-        collector.on("collect", async (interaction) => {
-            const { customId } = interaction;
+        collector.on("collect", (i) => {
+            if (i.customId.startsWith("prev")) {
+                const prevIndex = Math.max(index - 1, 0);
+                const embed = new EmbedBuilder()
+                    .setColor(0x0099FF)
+                    .setImage(images[prevIndex])
+                    .setTimestamp()
+                    .setFooter({ text: `Page ${prevIndex + 1}`, iconURL: interaction.user.displayAvatarURL() });
 
-            if (customId === "previous") {
-                const previousPage = parseInt(page) - 1;
-                embed.setImage(imageUrls[previousPage - 1]);
-                row.components[0].setDisabled(previousPage === "1");
-                row.components[1].setDisabled(previousPage === imageUrls.length.toString());
-            } else if (customId === "next") {
-                const nextPage = parseInt(page) + 1;
-                embed.setImage(imageUrls[nextPage - 1]);
-                row.components[0].setDisabled(nextPage === "1");
-                row.components[1].setDisabled(nextPage === imageUrls.length.toString());
+                i.update({ embeds: [embed], components: [rows[prevIndex]] });
             }
 
-            await interaction.update({ embeds: [embed], components: [row] });
+            if (i.customId.startsWith("next")) {
+                const nextIndex = Math.min(index + 1, images.length - 1);
+                const embed = new EmbedBuilder()
+                    .setColor(0x0099FF)
+                    .setImage(images[nextIndex])
+                    .setTimestamp()
+                    .setFooter({ text: `Page ${nextIndex + 1}`, iconURL: interaction.user.displayAvatarURL() });
+
+                i.update({ embeds: [embed], components: [rows[nextIndex]] });
+            }
         });
-    },
+
+        collector.on("end", (c) => {
+            console.log(`Collected ${c.size} items`);
+        });
+    }
 }
