@@ -9,13 +9,12 @@ const { SlashCommandBuilder } = require("@discordjs/builders");
   slashData: new SlashCommandBuilder()
   .setName("ping")
   .setDescription("Pong!"),
-  // komutu geliştirmek istersen guide: https://discordjs.guide/slash-commands/advanced-creation.html
-  cooldown: 5000,//1 saniye = 1000 ms / cooldown olmasını istemezseniz 0 yazın.
-  ownerOnly: false,//komutu sadece geliştiricinin kullanabilmesini istersen true olarak değiştir
+  cooldown: 5000,
+  ownerOnly: false,
   prefixRun: async (client, message, args) => {
-    message.reply(`Pong 🏓`)
+    message.reply(`${ping}ms`)
   },
   slashRun: async (client, interaction) => {
-    interaction.reply(`Pong 🏓`)
+    interaction.reply(`${ping}ms`)
   }
 }
