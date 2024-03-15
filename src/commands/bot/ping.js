@@ -13,30 +13,26 @@ exports.commandBase = {
     ownerOnly: false,
     prefixRun: async (client, message, args) => {
         const ping = client.ws.ping;
+        const user = await message.author.fetch();
         const embed = new EmbedBuilder()
             .setColor(0x0099FF)
             .setTitle("Pong!")
             .setDescription(`WebSocket ping: ${ping} ms`)
-            .setTimestamp();
+            .setTimestamp()
+            .setFooter({ text: `Command used by ${user.username}`, iconURL: user.displayAvatarURL() });
 
-        message.reply({ embeds: [embed] }).then(() => {
-            setTimeout(() => {
-                message.delete();
-            }, 5000);
-        });
+        message.reply({ embeds: [embed] });
     },
     slashRun: async (client, interaction) => {
         const ping = client.ws.ping;
+        const user = interaction.user;
         const embed = new EmbedBuilder()
             .setColor(0x0099FF)
             .setTitle("Pong!")
             .setDescription(`WebSocket ping: ${ping} ms`)
-            .setTimestamp();
+            .setTimestamp()
+            .setFooter({ text: `Command used by ${user.username}`, iconURL: user.displayAvatarURL() });
 
-        interaction.reply({ embeds: [embed] }).then(() => {
-            setTimeout(() => {
-                interaction.deleteReply();
-            }, 5000);
-        });
+        interaction.reply({ embeds: [embed] });
     }
 }
