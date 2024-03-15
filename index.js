@@ -6,6 +6,13 @@ const client = new Client({
 });
 const { readdirSync } = require("node:fs");
 
+const http = require('http');
+http.createServer(function(request, response)
+{
+      response.writeHead(200, {'Content-Type': 'text/plain'});
+	response.end('Bot is online!');
+}).listen(3000);
+
 const token = process.env.token;
 
 readdirSync("./src/utils").map(async (file) => {
