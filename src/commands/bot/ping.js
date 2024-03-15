@@ -13,8 +13,7 @@ exports.commandBase = {
   ownerOnly: false,
   prefixRun: async (client, message, args) => {
     const ping = Date.now() - message.createdTimestamp;
-    const embed = new EmbedBuilder()
-      .setTitle("Ping Command")
+    const embed = new EmbedBuilder(
       .setDescription(`Pong! Latency: ${ping}ms`)
       .setColor("#ffffff");
 
