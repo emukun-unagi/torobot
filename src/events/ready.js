@@ -7,7 +7,7 @@ module.exports = {
   once: true,
   execute: async (client) => {
     const rest = new REST({ version: "10" }).setToken(client.token);
-    const activities = [`${ping}`, `${client.user.username}`];
+    const activities = [`とろろ`, `${client.user.username}`];
     let nowActivity = 0;
 
     const botPresence = () => {
