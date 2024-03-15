@@ -8,7 +8,7 @@ const { SlashCommandBuilder } = require("@discordjs/builders");
   },
   slashData: new SlashCommandBuilder()
   .setName("ping")
-  .setDescription("Pong!"),
+  .setDescription("ping command"),
   cooldown: 5000,
   ownerOnly: false,
   prefixRun: async (client, message, args) => {
