@@ -12,9 +12,9 @@ const { SlashCommandBuilder } = require("@discordjs/builders");
   cooldown: 5000,
   ownerOnly: false,
   prefixRun: async (client, message, args) => {
-    message.reply(`${ping}ms`)
+    message.reply(`Pong!`)
   },
   slashRun: async (client, interaction) => {
-    interaction.reply(`${ping}ms`)
+    interaction.reply(`Pong!`)
   }
 }
