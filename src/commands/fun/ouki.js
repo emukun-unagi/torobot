@@ -75,7 +75,7 @@ exports.commandBase = {
             row.components[1].setDisabled(page === maxPages);
 
             // Edit the message
-            await interaction.editReply({ embeds: [embed], components: [row] });
+            await message.editReply({ embeds: [embed], components: [row] });
         });
 
         // Handle the collector ending
