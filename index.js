@@ -4,10 +4,9 @@ const client = new Client({
   partials: Object.values(Partials),
   shards: "auto"
 });
-const config = require("./src/config.js");
 const { readdirSync } = require("node:fs");
 
-let token = config.token;
+const token = process.env.token;
 
 readdirSync("./src/utils").map(async (file) => {
 const util = await require(`./src/utils/${file}`);
