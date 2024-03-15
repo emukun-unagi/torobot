@@ -19,9 +19,9 @@ exports.commandBase = {
             .setColor(0xFFFFFF)
             .setTitle("pong!")
             .addFields([
-                { name: "WebSocket ping", value: `${ping} ms`, inline: true },
-                { name: "Message ping", value: `${messagePing} ms`, inline: true },
-                { name: "API ping", value: `${apiPing} ms`, inline: true },
+                { name: "WebSocket ping", value: `${ping} ms`, inline: false },
+                { name: "Message ping", value: `${messagePing} ms`, inline: false },
+                { name: "API ping", value: `${apiPing} ms`, inline: false },
             ])
             .setTimestamp()
             .setFooter({ text: `Command used by ${message.author.username}`, iconURL: message.author.displayAvatarURL() });
@@ -36,9 +36,9 @@ exports.commandBase = {
             .setColor(0xFFFFFF)
             .setTitle("pong!")
             .addFields([
-                { name: "WebSocket ping", value: `${ping} ms`, inline: true },
-                { name: "Message ping", value: `${messagePing} ms`, inline: true },
-                { name: "API ping", value: `${apiPing} ms`, inline: true },
+                { name: "WebSocket ping", value: `${ping} ms`, inline: false },
+                { name: "Message ping", value: `${messagePing} ms`, inline: false },
+                { name: "API ping", value: `${apiPing} ms`, inline: false },
             ])
             .setTimestamp()
             .setFooter({ text: `Command used by ${interaction.user.username}`, iconURL: interaction.user.displayAvatarURL() });
