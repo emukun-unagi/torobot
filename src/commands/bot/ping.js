@@ -12,24 +12,48 @@ exports.commandBase = {
     cooldown: 5000,
     ownerOnly: false,
     prefixRun: async (client, message, args) => {
-        const ping = client.ws.ping;
-        const user = await message.author.fetch();
+        const start = Date.now();
+        const ws = client.ws;
+
+        await ws.connect();
+
+        await new Promise(resolve => {
+            ws.on('ready', resolve);
+        });
+
+        const connectTime = Date.now() - start;
+
+        ws.disconnect();
+
         const embed = new EmbedBuilder()
-            .setColor(0xFFFFFF)
-            .setDescription(`**${ping} ms**`)
+            .setColor(0x0099FF)
+            .setTitle("Pong!")
+            .setDescription(`WebSocket connection time: ${connectTime} ms`)
             .setTimestamp()
-            .setFooter({ text: `Command used by ${user.username}`, iconURL: user.displayAvatarURL() });
+            .setFooter({ text: `Command used by ${message.author.username}`, iconURL: message.author.displayAvatarURL() });
 
         message.reply({ embeds: [embed] });
     },
     slashRun: async (client, interaction) => {
-        const ping = client.ws.ping;
-        const user = interaction.user;
+        const start = Date.now();
+        const ws = client.ws;
+
+        await ws.connect();
+
+        await new Promise(resolve => {
+            ws.on('ready', resolve);
+        });
+
+        const connectTime = Date.now() - start;
+
+        ws.disconnect();
+
         const embed = new EmbedBuilder()
-            .setColor(0xFFFFFF)
-            .setDescription(`**${ping} ms**`)
+            .setColor(0x0099FF)
+            .setTitle("Pong!")
+            .setDescription(`WebSocket connection time: ${connectTime} ms`)
             .setTimestamp()
-            .setFooter({ text: `Command used by ${user.username}`, iconURL: user.displayAvatarURL() });
+            .setFooter({ text: `Command used by ${interaction.user.username}`, iconURL: interaction.user.displayAvatarURL() });
 
         interaction.reply({ embeds: [embed] });
     }
