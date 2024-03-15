@@ -19,7 +19,11 @@ exports.commandBase = {
             .setDescription(`WebSocket ping: ${ping} ms`)
             .setTimestamp();
 
-        message.reply({ embeds: [embed] });
+        message.reply({ embeds: [embed] }).then(() => {
+            setTimeout(() => {
+                message.delete();
+            }, 5000);
+        });
     },
     slashRun: async (client, interaction) => {
         const ping = client.ws.ping;
@@ -29,6 +33,10 @@ exports.commandBase = {
             .setDescription(`WebSocket ping: ${ping} ms`)
             .setTimestamp();
 
-        interaction.reply({ embeds: [embed] });
+        interaction.reply({ embeds: [embed] }).then(() => {
+            setTimeout(() => {
+                interaction.deleteReply();
+            }, 5000);
+        });
     }
 }
