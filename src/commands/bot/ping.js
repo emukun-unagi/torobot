@@ -14,7 +14,7 @@ exports.commandBase = {
   prefixRun: async (client, message, args) => {
     const ping = Date.now() - message.createdTimestamp;
     const embed = new EmbedBuilder(
-      embed.setDescription(`${ping}ms`)
+      embed.setDescription(`${ping}ms`);
       embed.setColor("#ffffff");
 
     message.reply({ embeds: [embed] });
@@ -22,7 +22,7 @@ exports.commandBase = {
   slashRun: async (client, interaction) => {
     const ping = Date.now() - interaction.createdTimestamp;
     const embed = new EmbedBuilder()
-      embed.setDescription(`${ping}ms`)
+      embed.setDescription(`${ping}ms`);
       embed.setColor("ffffff");
 
     interaction.reply({ embeds: [embed] });
