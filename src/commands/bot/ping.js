@@ -1,4 +1,4 @@
-const { EmbedBuilder } = require("discord.js");
+const { MessageEmbed } = require("discord.js");
 const { SlashCommandBuilder } = require("@discordjs/builders");
 
 exports.commandBase = {
@@ -17,7 +17,7 @@ exports.commandBase = {
     const endTime = Date.now();
     const ping = endTime - startTime;
 
-    const embed = new EmbedBuilder()
+    const embed = new MessageEmbed()
       .setTitle("Ping")
       .addField("Latency", `${ping}ms`, true)
       .addField("API Latency", `${client.ws.ping}ms`, true)
@@ -36,7 +36,7 @@ exports.commandBase = {
     const endTime = Date.now();
     const ping = endTime - startTime;
 
-    const embed = new EmbedBuilder()
+    const embed = new MessageEmbed()
       .setTitle("Ping")
       .addField("Latency", `${ping}ms`, true)
       .addField("API Latency", `${client.ws.ping}ms`, true)
