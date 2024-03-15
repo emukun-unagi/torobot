@@ -15,9 +15,8 @@ exports.commandBase = {
         const ping = client.ws.ping;
         const user = await message.author.fetch();
         const embed = new EmbedBuilder()
-            .setColor(0x0099FF)
-            .setTitle("Pong!")
-            .setDescription(`WebSocket ping: ${ping} ms`)
+            .setColor(0xFFFFFF)
+            .setDescription(`**${ping} ms**`)
             .setTimestamp()
             .setFooter({ text: `Command used by ${user.username}`, iconURL: user.displayAvatarURL() });
 
@@ -27,9 +26,8 @@ exports.commandBase = {
         const ping = client.ws.ping;
         const user = interaction.user;
         const embed = new EmbedBuilder()
-            .setColor(0x0099FF)
-            .setTitle("Pong!")
-            .setDescription(`WebSocket ping: ${ping} ms`)
+            .setColor(0xFFFFFF)
+            .setDescription(`**${ping} ms**`)
             .setTimestamp()
             .setFooter({ text: `Command used by ${user.username}`, iconURL: user.displayAvatarURL() });
 
