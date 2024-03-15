@@ -1,52 +1,34 @@
-const { MessageEmbed } = require("discord.js");
+const { EmbedBuilder, PermissionsBitField } = require("discord.js");
 const { SlashCommandBuilder } = require("@discordjs/builders");
 
 exports.commandBase = {
-  prefixData: {
-    name: "ping",
-    aliases: ["pong"]
-  },
-  slashData: new SlashCommandBuilder()
-    .setName("ping")
-    .setDescription("ping command"),
-  cooldown: 5000,
-  ownerOnly: false,
-  prefixRun: async (client, message, args) => {
-    const startTime = Date.now();
-    const sentMessage = await message.reply("Pinging...");
-    const endTime = Date.now();
-    const ping = endTime - startTime;
+    prefixData: {
+        name: "ping",
+        aliases: ["pong"]
+    },
+    slashData: new SlashCommandBuilder()
+        .setName("ping")
+        .setDescription("Pong!"),
+    cooldown: 5000,
+    ownerOnly: false,
+    prefixRun: async (client, message, args) => {
+        const ping = client.ws.ping;
+        const embed = new EmbedBuilder()
+            .setColor(0x0099FF)
+            .setTitle("Pong!")
+            .setDescription(`WebSocket ping: ${ping} ms`)
+            .setTimestamp();
 
-    const embed = new MessageEmbed()
-      .setTitle("Ping")
-      .addField("Latency", `${ping}ms`, true)
-      .addField("API Latency", `${client.ws.ping}ms`, true)
-      .setColor("#0099ff")
-      .setFooter(
-        `Requested by ${message.author.tag}`,
-        message.author.displayAvatarURL()
-      )
-      .setTimestamp();
+        message.reply({ embeds: [embed] });
+    },
+    slashRun: async (client, interaction) => {
+        const ping = client.ws.ping;
+        const embed = new EmbedBuilder()
+            .setColor(0x0099FF)
+            .setTitle("Pong!")
+            .setDescription(`WebSocket ping: ${ping} ms`)
+            .setTimestamp();
 
-    sentMessage.edit({ content: "Pong!", embeds: [embed] });
-  },
-  slashRun: async (client, interaction) => {
-    const startTime = Date.now();
-    await interaction.deferReply();
-    const endTime = Date.now();
-    const ping = endTime - startTime;
-
-    const embed = new MessageEmbed()
-      .setTitle("Ping")
-      .addField("Latency", `${ping}ms`, true)
-      .addField("API Latency", `${client.ws.ping}ms`, true)
-      .setColor("#0099ff")
-      .setFooter(
-        `Requested by ${interaction.user.tag}`,
-        interaction.user.displayAvatarURL()
-      )
-      .setTimestamp();
-
-    await interaction.editReply({ embeds: [embed] });
-  }
+        interaction.reply({ embeds: [embed] });
+    }
 }
