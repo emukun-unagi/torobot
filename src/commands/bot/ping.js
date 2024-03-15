@@ -14,16 +14,16 @@ exports.commandBase = {
   prefixRun: async (client, message, args) => {
     const ping = Date.now() - message.createdTimestamp;
     const embed = new EmbedBuilder(
-      .setDescription(`Pong! Latency: ${ping}ms`)
-      .setColor("#ffffff");
+      embed.setDescription(`${ping}ms`)
+      embed.setColor("#ffffff");
 
     message.reply({ embeds: [embed] });
   },
   slashRun: async (client, interaction) => {
     const ping = Date.now() - interaction.createdTimestamp;
     const embed = new EmbedBuilder()
-      .setDescription(`${ping}ms`)
-       .setColor("ffffff");
+      embed.setDescription(`${ping}ms`)
+      embed.setColor("ffffff");
 
     interaction.reply({ embeds: [embed] });
   }
