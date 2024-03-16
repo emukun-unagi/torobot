@@ -111,15 +111,15 @@ const images = [
 
 exports.commandBase = {
   prefixData: {
-    name: "ouki",
+    name: "image",
     aliases: []
   },
   slashData: new SlashCommandBuilder()
-    .setName("ouki")
-    .setDescription("Oukis!")
+    .setName("image")
+    .setDescription("画像を表示します")
     .addStringOption((option) =>
-      option.setName("people")
-        .setDescription("Select people")
+      option.setName("人")
+        .setDescription("人を選択してください")
         .setChoices(
           { name: "とろろ", value: "user1" },
         )
@@ -135,15 +135,15 @@ exports.commandBase = {
     let index = 1;
 
     const embed = new EmbedBuilder()
-      .setColor(0x0099FF)
+      .setColor(0xFFFFFF)
       .setImage(selectedImages[index - 1].image)
       .setTimestamp()
-      .setFooter({ text: `Page ${index}`, iconURL: interaction.user.displayAvatarURL() });
+      .setFooter({ iconURL: interaction.user.displayAvatarURL() });
 
     const row = new ActionRowBuilder().addComponents(
       new SelectMenuBuilder()
         .setCustomId("image-select")
-        .setPlaceholder("Select an image...")
+        .setPlaceholder("画像を選択してください")
         .addOptions(
           selectedImages.map((image) => ({
             label: image.label,
@@ -168,10 +168,10 @@ exports.commandBase = {
         const selectedImage = selectedImages.find((image) => image.value === i.values[0].split("_")[0]);
 
         const embed = new EmbedBuilder()
-          .setColor(0x0099FF)
+          .setColor(0xFFFFFF)
           .setImage(selectedImage.image)
           .setTimestamp()
-          .setFooter({ text: `Page ${index}`, iconURL: interaction.user.displayAvatarURL() });
+          .setFooter({ iconURL: interaction.user.displayAvatarURL() });
 
         i.update({ embeds: [embed], components: [row] });
       }
