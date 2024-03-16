@@ -107,6 +107,139 @@ const images = [
     image: "https://cdn.discordapp.com/attachments/1218427049866166293/1218427253600551002/IMG_7582.jpeg?ex=66079fce&is=65f52ace&hm=438d904c7dca64c571f7999aa2a9a00bce733bfcd203b8f3dc5cee31cc12c920&",
     owner: "user1"
   },
+  {
+    label: "とろろ",
+    value: "16",
+    description: "かどまつ",
+    image: "https://cdn.discordapp.com/attachments/1218427049866166293/1218427253386383391/IMG_7583.jpeg?ex=66079fce&is=65f52ace&hm=a36529a5c9fe229b83e5a67fa089170a3fe00bf68df4f8f6a7ad328da424dd52&",
+    owner: "user1"
+  },
+  {
+    label: "とろろ",
+    value: "17",
+    description: "まぐろ",
+    image: "https://cdn.discordapp.com/attachments/1218427049866166293/1218427253151629312/IMG_6771.jpeg?ex=66079fce&is=65f52ace&hm=b2b84ff249d3f86f7e375c7f4e29511fe88a80c76420469d0e02a7e6482a59cf&",
+    owner: "user1"
+  },
+  {
+    label: "とろろ",
+    value: "18",
+    description: "てあしむきむき",
+    image: "https://cdn.discordapp.com/attachments/1218427049866166293/1218427252866285629/IMG_7585.jpeg?ex=66079fce&is=65f52ace&hm=1558b131c6fe500f09248cf76e0e7002e050414af530d6b6043c381ce9e04496&",
+    owner: "user1"
+  },
+  {
+    label: "とろろ",
+    value: "19",
+    description: "てむきむき",
+    image: "https://cdn.discordapp.com/attachments/1218427049866166293/1218427252539133992/IMG_7586.jpeg?ex=66079fce&is=65f52ace&hm=0b463ca45d217821d67fca306e2be72f4d2e4de751f4d4d11b654df1e016b05e&",
+    owner: "user1"
+  },
+  {
+    label: "とろろ",
+    value: "20",
+    description: "あしむきむき",
+    image: "https://cdn.discordapp.com/attachments/1218427049866166293/1218427252157579295/IMG_7587.jpeg?ex=66079fce&is=65f52ace&hm=fc29366d04ef3df3bbb8b0bea410b584ed2fb4c13fa2c55570ec5f354e907c0d&",
+    owner: "user1"
+  },
+  {
+    label: "とろろ",
+    value: "21",
+    description: "かに",
+    image: "https://cdn.discordapp.com/attachments/1218427049866166293/1218427251905790012/IMG_7588.jpeg?ex=66079fce&is=65f52ace&hm=41cfae0506e2129cd17b370d3a76dd091cd896f49494239435693453235b51b4&",
+    owner: "user1"
+  },
+  {
+    label: "とろろ",
+    value: "22",
+    description: "りゅう",
+    image: "https://cdn.discordapp.com/attachments/1218427049866166293/1218427251670913064/IMG_7589.jpeg?ex=66079fce&is=65f52ace&hm=a712db9c63f8c0d22e5cb173c3bd5650d610bb3b98cfd417096cfef1bf573334&",
+    owner: "user1"
+  },
+  {
+    label: "とろろ",
+    value: "23",
+    description: "ふじさん",
+    image: "https://cdn.discordapp.com/attachments/1218427049866166293/1218427251406798929/IMG_6769.jpeg?ex=66079fce&is=65f52ace&hm=52d34f38bfecb005663c7d96f331d9e248dbf46fdf622d15b6ab22097231abf7&",
+    owner: "user1"
+  },
+  {
+    label: "とろろ",
+    value: "24",
+    description: "たか",
+    image: "https://cdn.discordapp.com/attachments/1218427049866166293/1218427251180175380/IMG_6770.jpeg?ex=66079fcd&is=65f52acd&hm=e20156b43547d28edfa0b71d823e2aea3117983121223e9dc6b9018da48e5b1d&",
+    owner: "user1"
+  },
+  {
+    label: "とろろ",
+    value: "25",
+    description: "なす",
+    image: "https://cdn.discordapp.com/attachments/1218427049866166293/1218427200609456219/IMG_7592.jpeg?ex=66079fc1&is=65f52ac1&hm=44bdbe281f459edc7613f256e894998c5644f9f0b5647f0e18459768adbe0bc0&",
+    owner: "user1"
+  },
+  {
+    label: "とろろ",
+    value: "26",
+    description: "はこいり",
+    image: "https://cdn.discordapp.com/attachments/1218427049866166293/1218427200370376704/IMG_7593.jpeg?ex=66079fc1&is=65f52ac1&hm=adbd2901abb481e91d5d94afca6df811d7fb37ce5a4a322b1d31816313e6a76b&",
+    owner: "user1"
+  },
+  {
+    label: "とろろ",
+    value: "27",
+    description: "うーぱーるーぱー",
+    image: "https://cdn.discordapp.com/attachments/1218427049866166293/1218427200102076416/IMG_7594.jpeg?ex=66079fc1&is=65f52ac1&hm=52f2bc63232d68f12dbb1eafc70582cf20640864d4d4ee83510c846630612984&",
+    owner: "user1"
+  },
+  {
+    label: "とろろ",
+    value: "28",
+    description: "にわとり",
+    image: "https://cdn.discordapp.com/attachments/1218427049866166293/1218427199837704223/IMG_7595.jpeg?ex=66079fc1&is=65f52ac1&hm=491e6b99a3373f98b66369f97c136fdb8deb1513b15d1d691975272d47947374&",
+    owner: "user1"
+  },
+  {
+    label: "とろろ",
+    value: "",
+    description: "",
+    image: "",
+    owner: "user1"
+  },
+  {
+    label: "とろろ",
+    value: "",
+    description: "",
+    image: "",
+    owner: "user1"
+  },
+  {
+    label: "とろろ",
+    value: "",
+    description: "",
+    image: "",
+    owner: "user1"
+  },
+  {
+    label: "とろろ",
+    value: "",
+    description: "",
+    image: "",
+    owner: "user1"
+  },
+  {
+    label: "とろろ",
+    value: "",
+    description: "",
+    image: "",
+    owner: "user1"
+  },
+  {
+    label: "とろろ",
+    value: "",
+    description: "",
+    image: "",
+    owner: "user1"
+  },
 ];
 
 exports.commandBase = {
@@ -133,7 +266,6 @@ exports.commandBase = {
     const selectedImages = images.filter((image) => image.owner === people);
 
     if (selectedImages.length === 0) {
-      // 返信メッセージを追加
       return await interaction.reply({ content: "選択したユーザーに該当する画像がありません。", ephemeral: true });
     }
 
