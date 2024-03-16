@@ -166,7 +166,6 @@ exports.commandBase = {
       if (i.isSelectMenu()) {
         index = parseInt(i.values[0].split("_")[1], 10);
         const selectedImage = selectedImages.find((image) => image.value === i.values[0].split("_")[0]);
-
         const embed = new EmbedBuilder()
           .setColor(0xFFFFFF)
           .setImage(selectedImage.image)
@@ -178,7 +177,17 @@ exports.commandBase = {
     });
 
     collector.on("end", (c) => {
+      if (c.size === 0) {
+        const selectedImage = selectedImages[index - 1];
+        const embed = new EmbedBuilder()
+          .setColor(0xFFFFFF)
+          .setImage(selectedImage.image)
+          .setTimestamp()
+          .setFooter({ iconURL: interaction.user.displayAvatarURL() });
+
+        i.editReply({ embeds: [embed], components: [row] });
+      }
       console.log(`Collected ${c.size} items`);
-    });
+　 　});
   }
 };
