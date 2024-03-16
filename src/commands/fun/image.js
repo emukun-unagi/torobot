@@ -240,6 +240,20 @@ const images = [
     image: "https://cdn.discordapp.com/attachments/1218427049866166293/1218427198369697812/IMG_6843.jpeg?ex=66079fc1&is=65f52ac1&hm=465bd04fca7212a754afd1b1195e40e04528fec44f5f5544f1bee01aa2d64dfa&",
     owner: "user2"
   },
+  {
+    label: "とろろ",
+    value: "35",
+    description: "八頭身",
+    image: "https://cdn.discordapp.com/attachments/1218427049866166293/1218529181625880616/IMG_7635.jpeg?ex=6607febc&is=65f589bc&hm=9a6ba2eca35cb06f4987561e4e8f9a06c197a774aad605b5742294019032aaa2&",
+    owner: "user2"
+  },
+  {
+    label: "とろろ",
+    value: "36",
+    description: "八頭身サングラス",
+    image: "https://cdn.discordapp.com/attachments/1218427049866166293/1218529181885923368/IMG_7630.jpeg?ex=6607febc&is=65f589bc&hm=6a3a8dc4c7b120dcc5a2955af987a72f19f2b138cbe514cb1b842f79c93ae715&",
+    owner: "user2"
+  },
 ];
 
 exports.commandBase = {
