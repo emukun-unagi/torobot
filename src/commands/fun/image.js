@@ -118,7 +118,7 @@ exports.commandBase = {
     .setName("image")
     .setDescription("画像を表示します")
     .addStringOption((option) =>
-      option.setName("人")
+      option.setName("people")
         .setDescription("人を選択してください")
         .setChoices(
           { name: "とろろ", value: "user1" },
@@ -131,6 +131,10 @@ exports.commandBase = {
     const people = interaction.options.getString("people");
 
     const selectedImages = images.filter((image) => image.owner === people);
+
+    if (selectedImages.length === 0) {
+      return await interaction.reply({ content: "選択したユーザーに該当する画像がありません。", ephemeral: true });
+    }
 
     let index = 1;
 
@@ -159,13 +163,14 @@ exports.commandBase = {
 
     const collector = interaction.channel.createMessageComponentCollector({
       filter,
-      time: 60000
+      time: 0
     });
 
     collector.on("collect", (i) => {
       if (i.isSelectMenu()) {
         index = parseInt(i.values[0].split("_")[1], 10);
         const selectedImage = selectedImages.find((image) => image.value === i.values[0].split("_")[0]);
+
         const embed = new EmbedBuilder()
           .setColor(0xFFFFFF)
           .setImage(selectedImage.image)
@@ -177,17 +182,7 @@ exports.commandBase = {
     });
 
     collector.on("end", (c) => {
-      if (c.size === 0) {
-        const selectedImage = selectedImages[index - 1];
-        const embed = new EmbedBuilder()
-          .setColor(0xFFFFFF)
-          .setImage(selectedImage.image)
-          .setTimestamp()
-          .setFooter({ iconURL: interaction.user.displayAvatarURL() });
-
-        i.editReply({ embeds: [embed], components: [row] });
-      }
       console.log(`Collected ${c.size} items`);
-　 　});
+    });
   }
 };
