@@ -133,6 +133,7 @@ exports.commandBase = {
     const selectedImages = images.filter((image) => image.owner === people);
 
     if (selectedImages.length === 0) {
+      // 返信メッセージを追加
       return await interaction.reply({ content: "選択したユーザーに該当する画像がありません。", ephemeral: true });
     }
 
@@ -141,8 +142,11 @@ exports.commandBase = {
     const embed = new EmbedBuilder()
       .setColor(0xFFFFFF)
       .setImage(selectedImages[index - 1].image)
-      .setTimestamp()
-      .setFooter({ iconURL: interaction.user.displayAvatarURL() });
+      .setTimestamp();
+
+    if (interaction.user) {
+      embed.setFooter({ text: interaction.user.username, iconURL: interaction.user.displayAvatarURL() });
+    }
 
     const row = new ActionRowBuilder().addComponents(
       new SelectMenuBuilder()
@@ -163,7 +167,7 @@ exports.commandBase = {
 
     const collector = interaction.channel.createMessageComponentCollector({
       filter,
-      time: 0
+      time: 0 // 時間を0に設定
     });
 
     collector.on("collect", (i) => {
@@ -174,8 +178,11 @@ exports.commandBase = {
         const embed = new EmbedBuilder()
           .setColor(0xFFFFFF)
           .setImage(selectedImage.image)
-          .setTimestamp()
-          .setFooter({ iconURL: interaction.user.displayAvatarURL() });
+          .setTimestamp();
+
+        if (interaction.user) {
+          embed.setFooter({ text: interaction.user.username, iconURL: interaction.user.displayAvatarURL() });
+        }
 
         i.update({ embeds: [embed], components: [row] });
       }
