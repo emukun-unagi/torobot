@@ -1,4 +1,11 @@
-const { EmbedBuilder, PermissionsBitField, ActionRowBuilder, SelectMenuBuilder, ButtonBuilder, ButtonStyle } = require("discord.js");
+const {
+  EmbedBuilder,
+  PermissionsBitField,
+  ActionRowBuilder,
+  StringSelectMenuBuilder,
+  ButtonBuilder,
+  ButtonStyle
+} = require("discord.js");
 const { SlashCommandBuilder } = require("@discordjs/builders");
 
 const images = [
@@ -281,7 +288,7 @@ exports.commandBase = {
     }
 
     const row = new ActionRowBuilder().addComponents(
-      new SelectMenuBuilder()
+      new StringSelectMenuBuilder()
         .setCustomId("image-select")
         .setPlaceholder("画像を選択してください")
         .addOptions(
@@ -299,11 +306,11 @@ exports.commandBase = {
 
     const collector = interaction.channel.createMessageComponentCollector({
       filter,
-      time: 0 // 時間を0に設定
+      time: 0
     });
 
     collector.on("collect", (i) => {
-      if (i.isSelectMenu()) {
+      if (i.isStringSelectMenu()) {
         index = parseInt(i.values[0].split("_")[1], 10);
         const selectedImage = selectedImages.find((image) => image.value === i.values[0].split("_")[0]);
 
