@@ -121,24 +121,12 @@ exports.commandBase = {
         ephemeral: true
       });
 
-      rows.forEach((row, i) => {
-        row.components.forEach((component) => {
-          if (component.setDisabled) {
-            component.setDisabled(false);
-          }
-        });
+      // ページを変更した後にボタンが使えなくなる問題を修正
+      rows[page - 1].components.forEach((component) => {
+        if (component.setDisabled) {
+          component.setDisabled(false);
+        }
       });
-
-      if (page === 0) {
-        rows[0].components[0].setDisabled(true);
-      } else if (page === images.length) {
-        rows[images.length - 1].components[1].setDisabled(true);
-      } else {
-        rows[page - 1].components[0].setDisabled(page === 1);
-        rows[page - 1].components[1].setDisabled(page === images.length);
-      }
-
-      collector.resetTimer();
     };
 
     collector.on("collect", (i) => {
@@ -159,14 +147,12 @@ exports.commandBase = {
         });
         index = prevIndex;
 
-        rows.forEach((row, i) => {
-          if (i === index) {
-            row.components[0].setDisabled(index === 0);
-            row.components[1].setDisabled(index === images.length - 1);
+        // ボタンが使えなくなる問題を修正
+        rows[prevIndex].components.forEach((component) => {
+          if (component.setDisabled) {
+            component.setDisabled(false);
           }
         });
-
-        collector.resetTimer();
       }
 
       if (i.customId.startsWith("next")) {
@@ -186,24 +172,22 @@ exports.commandBase = {
         });
         index = nextIndex;
 
-        rows.forEach((row, i) => {
-          if (i === index) {
-            row.components[0].setDisabled(index === 0);
-            row.components[1].setDisabled(index === images.length - 1);
+        // ボタンが使えなくなる問題を修正
+        rows[nextIndex].components.forEach((component) => {
+          if (component.setDisabled) {
+            component.setDisabled(false);
           }
         });
-
-        collector.resetTimer();
       }
 
       if (i.customId.startsWith("change-page")) {
         const modal = new ModalBuilder()
           .setCustomId("change-page-modal")
-          .setTitle("ページ変更");
+          .setTitle("Change page");
 
         const pageInput = new TextInputBuilder()
           .setCustomId("page-input")
-          .setLabel("ページを入力してください")
+          .setLabel("Enter the page number")
           .setStyle(TextInputStyle.Short)
           .setRequired(true);
 
