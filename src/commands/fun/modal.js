@@ -2,16 +2,8 @@ const { EmbedBuilder, PermissionsBitField, ActionRowBuilder, ButtonBuilder, Butt
 const { SlashCommandBuilder } = require("@discordjs/builders");
 
 const images = [
-  "https://cdn.discordapp.com/attachments/1218427049866166293/1218529181885923368/IMG_7630.jpeg?ex=6607febc&is=65f589bc&hm=6a3a8dc4c7b120dcc5a2955af987a72f19f2b138cbe514cb1b842f79c93ae715&",
-  "https://cdn.discordapp.com/attachments/1218427049866166293/1218529181885923368/IMG_7630.jpeg?ex=6607febc&is=65f589bc&hm=6a3a8dc4c7b120dcc5a2955af987a72f19f2b138cbe514cb1b842f79c93ae715&",
-  "https://cdn.discordapp.com/attachments/1218427049866166293/1218529181885923368/IMG_7630.jpeg?ex=6607febc&is=65f589bc&hm=6a3a8dc4c7b120dcc5a2955af987a72f19f2b138cbe514cb1b842f79c93ae715&",
-  "https://cdn.discordapp.com/attachments/1218427049866166293/1218529181885923368/IMG_7630.jpeg?ex=6607febc&is=65f589bc&hm=6a3a8dc4c7b120dcc5a2955af987a72f19f2b138cbe514cb1b842f79c93ae715&",
-  "https://cdn.discordapp.com/attachments/1218427049866166293/1218529181885923368/IMG_7630.jpeg?ex=6607febc&is=65f589bc&hm=6a3a8dc4c7b120dcc5a2955af987a72f19f2b138cbe514cb1b842f79c93ae715&",
-  "https://cdn.discordapp.com/attachments/1218427049866166293/1218529181885923368/IMG_7630.jpeg?ex=6607febc&is=65f589bc&hm=6a3a8dc4c7b120dcc5a2955af987a72f19f2b138cbe514cb1b842f79c93ae715&",
-  "https://cdn.discordapp.com/attachments/1218427049866166293/1218529181885923368/IMG_7630.jpeg?ex=6607febc&is=65f589bc&hm=6a3a8dc4c7b120dcc5a2955af987a72f19f2b138cbe514cb1b842f79c93ae715&",
-  "https://cdn.discordapp.com/attachments/1218427049866166293/1218529181885923368/IMG_7630.jpeg?ex=6607febc&is=65f589bc&hm=6a3a8dc4c7b120dcc5a2955af987a72f19f2b138cbe514cb1b842f79c93ae715&",
-  "https://cdn.discordapp.com/attachments/1218427049866166293/1218529181885923368/IMG_7630.jpeg?ex=6607febc&is=65f589bc&hm=6a3a8dc4c7b120dcc5a2955af987a72f19f2b138cbe514cb1b842f79c93ae715&",
-  "https://cdn.discordapp.com/attachments/1218427049866166293/1218529181885923368/IMG_7630.jpeg?ex=6607febc&is=65f589bc&hm=6a3a8dc4c7b120dcc5a2955af987a72f19f2b138cbe514cb1b842f79c93ae715&",
+  "https://example.com/image1.png",
+  "https://example.com/image2.png"
 ];
 
 const rows = [];
@@ -32,8 +24,8 @@ for (let i = 0; i < images.length; i++) {
         .setDisabled(i === images.length - 1),
 
       new ButtonBuilder()
-        .setCustomId(`change-page-${i}`)
-        .setLabel("✏️")
+        .setCustomId(`page-${i}`)
+        .setLabel("📄")
         .setStyle(ButtonStyle.Secondary)
     )
 
@@ -42,12 +34,12 @@ for (let i = 0; i < images.length; i++) {
 
 exports.commandBase = {
   prefixData: {
-    name: "modal",
+    name: "page",
     aliases: []
   },
   slashData: new SlashCommandBuilder()
-    .setName("modal")
-    .setDescription("modal command"),
+    .setName("page")
+    .setDescription("page command"),
   cooldown: 5000,
   ownerOnly: false,
   slashRun: async (client, interaction) => {
@@ -90,43 +82,16 @@ exports.commandBase = {
         index = nextIndex;
       }
 
-      if (i.customId.startsWith("change-page")) {
-        const modal = new ModalBuilder()
-          .setCustomId('change-page-modal')
-          .setTitle('Change page');
+      if (i.customId.startsWith("page-")) {
+        const pageIndex = parseInt(i.customId.split("-")[1]);
+        const embed = new EmbedBuilder()
+          .setColor(0x0099FF)
+          .setImage(images[pageIndex])
+          .setTimestamp()
+          .setFooter({ text: `Page ${pageIndex + 1}`, iconURL: interaction.user.displayAvatarURL() });
 
-        const pageInput = new TextInputBuilder()
-          .setCustomId('page-input')
-          .setLabel("Enter the page number")
-          .setStyle(TextInputStyle.Short)
-          .setRequired(true);
-
-        const firstRow = new ActionRowBuilder().addComponents(pageInput);
-        modal.addComponents(firstRow);
-
-        await i.showModal(modal);
-
-        const modalCollector = i.client.on('interactionCreate', interaction => {
-          if (!interaction.isModalSubmit()) return;
-          if (interaction.customId !== 'change-page-modal') return;
-          if (interaction.user.id !== i.user.id) return;
-
-          const page = parseInt(interaction.fields.getTextInputValue('page-input'));
-          if (isNaN(page) || page < 1 || page > images.length) {
-            return interaction.reply({ content: 'Invalid page number.', ephemeral: true });
-          }
-
-          const embed = new EmbedBuilder()
-            .setColor(0x0099FF)
-            .setImage(images[page - 1])
-            .setTimestamp()
-            .setFooter({ text: `Page ${page}`, iconURL: interaction.user.displayAvatarURL() });
-
-          i.update({ embeds: [embed], components: [rows[page - 1]] });
-          index = page - 1;
-
-          modalCollector.removeAllListeners();
-        });
+        await i.update({ embeds: [embed], components: [rows[pageIndex]] });
+        index = pageIndex;
       }
     });
 
