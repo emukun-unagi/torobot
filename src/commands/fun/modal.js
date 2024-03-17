@@ -1,17 +1,20 @@
-const { EmbedBuilder, PermissionsBitField, ActionRowBuilder, ButtonBuilder, ButtonStyle, ModalBuilder, TextInputBuilder, TextInputStyle } = require("discord.js");
-const { SlashCommandBuilder } = require("@discordjs/builders");
+const {
+  EmbedBuilder,
+  PermissionsBitField,
+  ActionRowBuilder,
+  ButtonBuilder,
+  ButtonStyle,
+  ModalBuilder,
+  TextInputBuilder,
+  TextInputStyle
+} = require("discord.js");
+const {
+  SlashCommandBuilder
+} = require("@discordjs/builders");
 
 const images = [
-  "https://cdn.discordapp.com/attachments/1218427049866166293/1218529181885923368/IMG_7630.jpeg?ex=6607febc&is=65f589bc&hm=6a3a8dc4c7b120dcc5a2955af987a72f19f2b138cbe514cb1b842f79c93ae715&",
-  "https://cdn.discordapp.com/attachments/1218427049866166293/1218529181885923368/IMG_7630.jpeg?ex=6607febc&is=65f589bc&hm=6a3a8dc4c7b120dcc5a2955af987a72f19f2b138cbe514cb1b842f79c93ae715&",
-  "https://cdn.discordapp.com/attachments/1218427049866166293/1218529181885923368/IMG_7630.jpeg?ex=6607febc&is=65f589bc&hm=6a3a8dc4c7b120dcc5a2955af987a72f19f2b138cbe514cb1b842f79c93ae715&",
-  "https://cdn.discordapp.com/attachments/1218427049866166293/1218529181885923368/IMG_7630.jpeg?ex=6607febc&is=65f589bc&hm=6a3a8dc4c7b120dcc5a2955af987a72f19f2b138cbe514cb1b842f79c93ae715&",
-  "https://cdn.discordapp.com/attachments/1218427049866166293/1218529181885923368/IMG_7630.jpeg?ex=6607febc&is=65f589bc&hm=6a3a8dc4c7b120dcc5a2955af987a72f19f2b138cbe514cb1b842f79c93ae715&",
-  "https://cdn.discordapp.com/attachments/1218427049866166293/1218529181885923368/IMG_7630.jpeg?ex=6607febc&is=65f589bc&hm=6a3a8dc4c7b120dcc5a2955af987a72f19f2b138cbe514cb1b842f79c93ae715&",
-  "https://cdn.discordapp.com/attachments/1218427049866166293/1218529181885923368/IMG_7630.jpeg?ex=6607febc&is=65f589bc&hm=6a3a8dc4c7b120dcc5a2955af987a72f19f2b138cbe514cb1b842f79c93ae715&",
-  "https://cdn.discordapp.com/attachments/1218427049866166293/1218529181885923368/IMG_7630.jpeg?ex=6607febc&is=65f589bc&hm=6a3a8dc4c7b120dcc5a2955af987a72f19f2b138cbe514cb1b842f79c93ae715&",
-  "https://cdn.discordapp.com/attachments/1218427049866166293/1218529181885923368/IMG_7630.jpeg?ex=6607febc&is=65f589bc&hm=6a3a8dc4c7b120dcc5a2955af987a72f19f2b138cbe514cb1b842f79c93ae715&",
-  "https://cdn.discordapp.com/attachments/1218427049866166293/1218529181885923368/IMG_7630.jpeg?ex=6607febc&is=65f589bc&hm=6a3a8dc4c7b120dcc5a2955af987a72f19f2b138cbe514cb1b842f79c93ae715&",
+  "https://example.com/image1.png",
+  "https://example.com/image2.png"
 ];
 
 const rows = [];
@@ -42,7 +45,7 @@ for (let i = 0; i < images.length; i++) {
 
 exports.commandBase = {
   prefixData: {
-    name: "modal",
+    name: "page",
     aliases: []
   },
   slashData: new SlashCommandBuilder()
@@ -71,7 +74,7 @@ exports.commandBase = {
 
     const collector = interaction.channel.createMessageComponentCollector({
       filter,
-      time: 0 // Set the time to 0 to disable the time limit
+      time: 0
     });
 
     let modalInteraction;
@@ -106,8 +109,6 @@ exports.commandBase = {
       collector.stop();
 
       modalCollector.off("interactionCreate");
-
-      modalInteraction.deferUpdate();
     };
 
     collector.on("collect", (i) => {
@@ -169,6 +170,16 @@ exports.commandBase = {
 
     collector.on("end", (c) => {
       console.log(`Collected ${c.size} items`);
+
+      rows.forEach((row, i) => {
+        row.components.forEach((component) => {
+          if (component.setDisabled) {
+            component.setDisabled(false);
+          }
+        });
+      });
+
+      client.off("interactionCreate", modalCollector);
     });
   }
 };
