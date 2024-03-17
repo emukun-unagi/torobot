@@ -94,9 +94,11 @@ exports.commandBase = {
 
       const page = parseInt(i.fields.getTextInputValue("page-input"));
       if (isNaN(page) || page < 1 || page > images.length) {
-        return i.editReply({
-          content: "Invalid page number.",
-          components: []
+        return i.deferUpdate().then(() => {
+          i.followUp({
+            content: "Invalid page number.",
+            ephemeral: true
+          });
         });
       }
 
@@ -109,23 +111,25 @@ exports.commandBase = {
           iconURL: interaction.user.displayAvatarURL()
         });
 
-      i.editReply({
-        embeds: [embed],
-        components: [rows[page - 1]]
-      });
+      i.deferUpdate().then(() => {
+        i.editReply({
+          embeds: [embed],
+          components: [rows[page - 1]]
+        });
 
-      collector.stop();
+        collector.stop();
 
-      i.reply({
-        content: "Page updated to " + page,
-        ephemeral: true
-      });
+        i.followUp({
+          content: "Page updated to " + page,
+          ephemeral: true
+        });
 
-      // ページを変更した後にボタンが使えるようにする
-      rows[page - 1].components.forEach((component) => {
-        if (component.setDisabled) {
-          component.setDisabled(false);
-        }
+        // ページを変更した後にボタンが使えるようにする
+        rows[page - 1].components.forEach((component) => {
+          if (component.setDisabled) {
+            component.setDisabled(false);
+          }
+        });
       });
     };
 
