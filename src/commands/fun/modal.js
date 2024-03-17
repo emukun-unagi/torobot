@@ -2,8 +2,16 @@ const { EmbedBuilder, PermissionsBitField, ActionRowBuilder, ButtonBuilder, Butt
 const { SlashCommandBuilder } = require("@discordjs/builders");
 
 const images = [
-  "https://example.com/image1.png",
-  "https://example.com/image2.png"
+  "https://cdn.discordapp.com/attachments/1218427049866166293/1218529181885923368/IMG_7630.jpeg?ex=6607febc&is=65f589bc&hm=6a3a8dc4c7b120dcc5a2955af987a72f19f2b138cbe514cb1b842f79c93ae715&",
+  "https://cdn.discordapp.com/attachments/1218427049866166293/1218529181885923368/IMG_7630.jpeg?ex=6607febc&is=65f589bc&hm=6a3a8dc4c7b120dcc5a2955af987a72f19f2b138cbe514cb1b842f79c93ae715&",
+  "https://cdn.discordapp.com/attachments/1218427049866166293/1218529181885923368/IMG_7630.jpeg?ex=6607febc&is=65f589bc&hm=6a3a8dc4c7b120dcc5a2955af987a72f19f2b138cbe514cb1b842f79c93ae715&",
+  "https://cdn.discordapp.com/attachments/1218427049866166293/1218529181885923368/IMG_7630.jpeg?ex=6607febc&is=65f589bc&hm=6a3a8dc4c7b120dcc5a2955af987a72f19f2b138cbe514cb1b842f79c93ae715&",
+  "https://cdn.discordapp.com/attachments/1218427049866166293/1218529181885923368/IMG_7630.jpeg?ex=6607febc&is=65f589bc&hm=6a3a8dc4c7b120dcc5a2955af987a72f19f2b138cbe514cb1b842f79c93ae715&",
+  "https://cdn.discordapp.com/attachments/1218427049866166293/1218529181885923368/IMG_7630.jpeg?ex=6607febc&is=65f589bc&hm=6a3a8dc4c7b120dcc5a2955af987a72f19f2b138cbe514cb1b842f79c93ae715&",
+  "https://cdn.discordapp.com/attachments/1218427049866166293/1218529181885923368/IMG_7630.jpeg?ex=6607febc&is=65f589bc&hm=6a3a8dc4c7b120dcc5a2955af987a72f19f2b138cbe514cb1b842f79c93ae715&",
+  "https://cdn.discordapp.com/attachments/1218427049866166293/1218529181885923368/IMG_7630.jpeg?ex=6607febc&is=65f589bc&hm=6a3a8dc4c7b120dcc5a2955af987a72f19f2b138cbe514cb1b842f79c93ae715&",
+  "https://cdn.discordapp.com/attachments/1218427049866166293/1218529181885923368/IMG_7630.jpeg?ex=6607febc&is=65f589bc&hm=6a3a8dc4c7b120dcc5a2955af987a72f19f2b138cbe514cb1b842f79c93ae715&",
+  "https://cdn.discordapp.com/attachments/1218427049866166293/1218529181885923368/IMG_7630.jpeg?ex=6607febc&is=65f589bc&hm=6a3a8dc4c7b120dcc5a2955af987a72f19f2b138cbe514cb1b842f79c93ae715&",
 ];
 
 const rows = [];
@@ -34,12 +42,12 @@ for (let i = 0; i < images.length; i++) {
 
 exports.commandBase = {
   prefixData: {
-    name: "page",
+    name: "modal",
     aliases: []
   },
   slashData: new SlashCommandBuilder()
-    .setName("page")
-    .setDescription("page command"),
+    .setName("modal")
+    .setDescription("modal command"),
   cooldown: 5000,
   ownerOnly: false,
   slashRun: async (client, interaction) => {
