@@ -36,6 +36,8 @@ const images = [
   "https://cdn.discordapp.com/attachments/1218427049866166293/1218427198835261440/IMG_6772.jpeg?ex=66079fc1&is=65f52ac1&hm=7ac900ff3ee1a9aefec0002852ed22accb495ac4e0f121f6f8e93f1b48bcd97b&",
   "https://cdn.discordapp.com/attachments/1218427049866166293/1218427198604709888/IMG_7600.jpeg?ex=66079fc1&is=65f52ac1&hm=5ee1ecc9bccec24faa821740fcbf75cb630d8683c5ce355d3b4860da08fd6856&",
   "https://cdn.discordapp.com/attachments/1218427049866166293/1218427198369697812/IMG_6843.jpeg?ex=66079fc1&is=65f52ac1&hm=465bd04fca7212a754afd1b1195e40e04528fec44f5f5544f1bee01aa2d64dfa&",
+  "https://cdn.discordapp.com/attachments/1218427049866166293/1218529181625880616/IMG_7635.jpeg?ex=6607febc&is=65f589bc&hm=9a6ba2eca35cb06f4987561e4e8f9a06c197a774aad605b5742294019032aaa2&",
+  "https://cdn.discordapp.com/attachments/1218427049866166293/1218529181885923368/IMG_7630.jpeg?ex=6607febc&is=65f589bc&hm=6a3a8dc4c7b120dcc5a2955af987a72f19f2b138cbe514cb1b842f79c93ae715&",
 ];
 
 const rows = [];
@@ -78,7 +80,7 @@ exports.commandBase = {
     let index = parseInt(interaction.options.get("index")?.value || "0");
 
     const embed = new EmbedBuilder()
-      .setColor(0x0099FF)
+      .setColor(0xFFFFFF)
       .setImage(images[index])
       .setTimestamp()
       .setFooter({
@@ -109,14 +111,14 @@ exports.commandBase = {
       if (isNaN(page) || page < 1 || page > images.length) {
         return i.deferUpdate().then(() => {
           i.followUp({
-            content: "Invalid page number.",
+            content: "無効なページです",
             ephemeral: true
           });
         });
       }
 
       const embed = new EmbedBuilder()
-        .setColor(0x0099FF)
+        .setColor(0xFFFFFF)
         .setImage(images[page - 1])
         .setTimestamp()
         .setFooter({
@@ -133,11 +135,10 @@ exports.commandBase = {
         collector.stop();
 
         i.followUp({
-          content: "Page updated to " + page,
+          content: "ページを変更しました" + page,
           ephemeral: true
         });
 
-        // ページを変更した後にボタンが使えるようにする
         rows[page - 1].components.forEach((component) => {
           if (component.setDisabled) {
             component.setDisabled(false);
@@ -150,7 +151,7 @@ exports.commandBase = {
       if (i.customId.startsWith("prev")) {
         const prevIndex = Math.max(index - 1, 0);
         const embed = new EmbedBuilder()
-          .setColor(0x0099FF)
+          .setColor(0xFFFFFF)
           .setImage(images[prevIndex])
           .setTimestamp()
           .setFooter({
@@ -164,7 +165,6 @@ exports.commandBase = {
         });
         index = prevIndex;
 
-        // ボタンが使えなくならないようにする
         rows[prevIndex].components.forEach((component) => {
           if (component.setDisabled) {
             component.setDisabled(false);
@@ -175,7 +175,7 @@ exports.commandBase = {
       if (i.customId.startsWith("next")) {
         const nextIndex = Math.min(index + 1, images.length - 1);
         const embed = new EmbedBuilder()
-          .setColor(0x0099FF)
+          .setColor(0xFFFFFF)
           .setImage(images[nextIndex])
           .setTimestamp()
           .setFooter({
@@ -189,7 +189,6 @@ exports.commandBase = {
         });
         index = nextIndex;
 
-        // ボタンが使えなくならないようにする
         rows[nextIndex].components.forEach((component) => {
           if (component.setDisabled) {
             component.setDisabled(false);
@@ -200,11 +199,11 @@ exports.commandBase = {
       if (i.customId.startsWith("change-page")) {
         const modal = new ModalBuilder()
           .setCustomId("change-page-modal")
-          .setTitle("Change page");
+          .setTitle("ページ変更");
 
         const pageInput = new TextInputBuilder()
           .setCustomId("page-input")
-          .setLabel("Enter the page number")
+          .setLabel("ページを入力")
           .setStyle(TextInputStyle.Short)
           .setRequired(true);
 
