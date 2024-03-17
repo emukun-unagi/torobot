@@ -53,7 +53,7 @@ for (let i = 0; i < images.length; i++) {
 
 exports.commandBase = {
   prefixData: {
-    name: "page",
+    name: "modal",
     aliases: []
   },
   slashData: new SlashCommandBuilder()
@@ -117,6 +117,11 @@ exports.commandBase = {
       collector.stop();
 
       modalCollector.off("interactionCreate");
+
+      i.reply({
+        content: "Page updated to " + page,
+        ephemeral: true
+      });
     };
 
     collector.on("collect", (i) => {
