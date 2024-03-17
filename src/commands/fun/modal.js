@@ -42,12 +42,12 @@ for (let i = 0; i < images.length; i++) {
 
 exports.commandBase = {
   prefixData: {
-    name: "page",
+    name: "modal",
     aliases: []
   },
   slashData: new SlashCommandBuilder()
-    .setName("page")
-    .setDescription("page command"),
+    .setName("modal")
+    .setDescription("modal command"),
   cooldown: 5000,
   ownerOnly: false,
   slashRun: async (client, interaction) => {
