@@ -121,7 +121,7 @@ exports.commandBase = {
         ephemeral: true
       });
 
-      // ページを変更した後にボタンが使えなくなる問題を修正
+      // ページを変更した後にボタンが使えるようにする
       rows[page - 1].components.forEach((component) => {
         if (component.setDisabled) {
           component.setDisabled(false);
@@ -147,7 +147,7 @@ exports.commandBase = {
         });
         index = prevIndex;
 
-        // ボタンが使えなくなる問題を修正
+        // ボタンが使えなくならないようにする
         rows[prevIndex].components.forEach((component) => {
           if (component.setDisabled) {
             component.setDisabled(false);
@@ -172,7 +172,7 @@ exports.commandBase = {
         });
         index = nextIndex;
 
-        // ボタンが使えなくなる問題を修正
+        // ボタンが使えなくならないようにする
         rows[nextIndex].components.forEach((component) => {
           if (component.setDisabled) {
             component.setDisabled(false);
@@ -203,7 +203,7 @@ exports.commandBase = {
     collector.on("end", () => {
       client.off("interactionCreate", modalCollector);
 
-      rows.forEach((row, i) => {
+      rows.forEach((row) => {
         row.components.forEach((component) => {
           if (component.setDisabled) {
             component.setDisabled(false);
