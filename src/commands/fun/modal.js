@@ -94,9 +94,9 @@ exports.commandBase = {
 
       const page = parseInt(i.fields.getTextInputValue("page-input"));
       if (isNaN(page) || page < 1 || page > images.length) {
-        return i.reply({
+        return i.editReply({
           content: "Invalid page number.",
-          ephemeral: true,
+          components: []
         });
       }
 
@@ -109,7 +109,7 @@ exports.commandBase = {
           iconURL: interaction.user.displayAvatarURL()
         });
 
-      interaction.editReply({
+      i.editReply({
         embeds: [embed],
         components: [rows[page - 1]]
       });
