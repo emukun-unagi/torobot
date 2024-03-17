@@ -53,7 +53,7 @@ for (let i = 0; i < images.length; i++) {
 
 exports.commandBase = {
   prefixData: {
-    name: "page",
+    name: "modal",
     aliases: []
   },
   slashData: new SlashCommandBuilder()
@@ -120,6 +120,25 @@ exports.commandBase = {
         content: "Page updated to " + page,
         ephemeral: true
       });
+
+      rows.forEach((row, i) => {
+        row.components.forEach((component) => {
+          if (component.setDisabled) {
+            component.setDisabled(false);
+          }
+        });
+      });
+
+      if (page === 0) {
+        rows[0].components[0].setDisabled(true);
+      } else if (page === images.length) {
+        rows[images.length - 1].components[1].setDisabled(true);
+      } else {
+        rows[page - 1].components[0].setDisabled(page === 1);
+        rows[page - 1].components[1].setDisabled(page === images.length);
+      }
+
+      collector.resetTimer();
     };
 
     collector.on("collect", (i) => {
@@ -139,6 +158,15 @@ exports.commandBase = {
           components: [rows[prevIndex]]
         });
         index = prevIndex;
+
+        rows.forEach((row, i) => {
+          if (i === index) {
+            row.components[0].setDisabled(index === 0);
+            row.components[1].setDisabled(index === images.length - 1);
+          }
+        });
+
+        collector.resetTimer();
       }
 
       if (i.customId.startsWith("next")) {
@@ -157,16 +185,25 @@ exports.commandBase = {
           components: [rows[nextIndex]]
         });
         index = nextIndex;
+
+        rows.forEach((row, i) => {
+          if (i === index) {
+            row.components[0].setDisabled(index === 0);
+            row.components[1].setDisabled(index === images.length - 1);
+          }
+        });
+
+        collector.resetTimer();
       }
 
       if (i.customId.startsWith("change-page")) {
         const modal = new ModalBuilder()
           .setCustomId("change-page-modal")
-          .setTitle("Change page");
+          .setTitle("ページ変更");
 
         const pageInput = new TextInputBuilder()
           .setCustomId("page-input")
-          .setLabel("Enter the page number")
+          .setLabel("ページを入力してください")
           .setStyle(TextInputStyle.Short)
           .setRequired(true);
 
