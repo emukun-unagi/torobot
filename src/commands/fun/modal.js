@@ -112,13 +112,11 @@ exports.commandBase = {
       if (!i.isModalSubmit()) return;
       if (i.user.id !== interaction.user.id) return;
 
-      modalInteraction = i;
-
       const page = parseInt(i.fields.getTextInputValue("page-input"));
       if (isNaN(page) || page < 1 || page > images.length) {
         return i.deferUpdate().then(() => {
           i.followUp({
-            content: "無効なページです",
+            content: "Invalid page",
             ephemeral: true
           });
         });
@@ -142,7 +140,7 @@ exports.commandBase = {
         collector.stop();
 
         i.followUp({
-          content: "ページを変更しました" + page,
+          content: `Page changed to ${page}`,
           ephemeral: true
         });
 
@@ -206,11 +204,11 @@ exports.commandBase = {
       if (i.customId.startsWith("change-page")) {
         const modal = new ModalBuilder()
           .setCustomId("change-page-modal")
-          .setTitle("ページ変更");
+          .setTitle("Page Change");
 
         const pageInput = new TextInputBuilder()
           .setCustomId("page-input")
-          .setLabel("ページを入力")
+          .setLabel("Enter page number")
           .setStyle(TextInputStyle.Short)
           .setRequired(true);
 
