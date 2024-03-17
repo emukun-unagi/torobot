@@ -53,7 +53,7 @@ for (let i = 0; i < images.length; i++) {
 
 exports.commandBase = {
   prefixData: {
-    name: "modal",
+    name: "page",
     aliases: []
   },
   slashData: new SlashCommandBuilder()
@@ -115,8 +115,6 @@ exports.commandBase = {
       });
 
       collector.stop();
-
-      modalCollector.off("interactionCreate");
 
       i.reply({
         content: "Page updated to " + page,
@@ -181,8 +179,8 @@ exports.commandBase = {
       }
     });
 
-    collector.on("end", (c) => {
-      console.log(`Collected ${c.size} items`);
+    collector.on("end", () => {
+      client.off("interactionCreate", modalCollector);
 
       rows.forEach((row, i) => {
         row.components.forEach((component) => {
@@ -191,8 +189,6 @@ exports.commandBase = {
           }
         });
       });
-
-      client.off("interactionCreate", modalCollector);
     });
   }
 };
