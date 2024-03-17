@@ -13,16 +13,8 @@ const {
 } = require("@discordjs/builders");
 
 const images = [
-  "https://cdn.discordapp.com/attachments/1218427049866166293/1218529181885923368/IMG_7630.jpeg?ex=6607febc&is=65f589bc&hm=6a3a8dc4c7b120dcc5a2955af987a72f19f2b138cbe514cb1b842f79c93ae715&",
-  "https://cdn.discordapp.com/attachments/1218427049866166293/1218529181885923368/IMG_7630.jpeg?ex=6607febc&is=65f589bc&hm=6a3a8dc4c7b120dcc5a2955af987a72f19f2b138cbe514cb1b842f79c93ae715&",
-  "https://cdn.discordapp.com/attachments/1218427049866166293/1218529181885923368/IMG_7630.jpeg?ex=6607febc&is=65f589bc&hm=6a3a8dc4c7b120dcc5a2955af987a72f19f2b138cbe514cb1b842f79c93ae715&",
-  "https://cdn.discordapp.com/attachments/1218427049866166293/1218529181885923368/IMG_7630.jpeg?ex=6607febc&is=65f589bc&hm=6a3a8dc4c7b120dcc5a2955af987a72f19f2b138cbe514cb1b842f79c93ae715&",
-  "https://cdn.discordapp.com/attachments/1218427049866166293/1218529181885923368/IMG_7630.jpeg?ex=6607febc&is=65f589bc&hm=6a3a8dc4c7b120dcc5a2955af987a72f19f2b138cbe514cb1b842f79c93ae715&",
-  "https://cdn.discordapp.com/attachments/1218427049866166293/1218529181885923368/IMG_7630.jpeg?ex=6607febc&is=65f589bc&hm=6a3a8dc4c7b120dcc5a2955af987a72f19f2b138cbe514cb1b842f79c93ae715&",
-  "https://cdn.discordapp.com/attachments/1218427049866166293/1218529181885923368/IMG_7630.jpeg?ex=6607febc&is=65f589bc&hm=6a3a8dc4c7b120dcc5a2955af987a72f19f2b138cbe514cb1b842f79c93ae715&",
-  "https://cdn.discordapp.com/attachments/1218427049866166293/1218529181885923368/IMG_7630.jpeg?ex=6607febc&is=65f589bc&hm=6a3a8dc4c7b120dcc5a2955af987a72f19f2b138cbe514cb1b842f79c93ae715&",
-  "https://cdn.discordapp.com/attachments/1218427049866166293/1218529181885923368/IMG_7630.jpeg?ex=6607febc&is=65f589bc&hm=6a3a8dc4c7b120dcc5a2955af987a72f19f2b138cbe514cb1b842f79c93ae715&",
-  "https://cdn.discordapp.com/attachments/1218427049866166293/1218529181885923368/IMG_7630.jpeg?ex=6607febc&is=65f589bc&hm=6a3a8dc4c7b120dcc5a2955af987a72f19f2b138cbe514cb1b842f79c93ae715&",
+  "https://example.com/image1.png",
+  "https://example.com/image2.png"
 ];
 
 const rows = [];
@@ -85,7 +77,41 @@ exports.commandBase = {
       time: 60000
     });
 
-    collector.on("collect", async (i) => {
+    let modalInteraction;
+    const modalCollector = (i) => {
+      if (!i.isModalSubmit()) return;
+      if (i.user.id !== interaction.user.id) return;
+
+      modalInteraction = i;
+
+      const page = parseInt(i.fields.getTextInputValue("page-input"));
+      if (isNaN(page) || page < 1 || page > images.length) {
+        return i.reply({
+          content: "Invalid page number.",
+          ephemeral: true,
+        });
+      }
+
+      const embed = new EmbedBuilder()
+        .setColor(0x0099FF)
+        .setImage(images[page - 1])
+        .setTimestamp()
+        .setFooter({
+          text: `Page ${page}`,
+          iconURL: interaction.user.displayAvatarURL()
+        });
+
+      interaction.editReply({
+        embeds: [embed],
+        components: [rows[page - 1]]
+      });
+
+      collector.stop();
+
+      modalCollector.off("interactionCreate");
+    };
+
+    collector.on("collect", (i) => {
       if (i.customId.startsWith("prev")) {
         const prevIndex = Math.max(index - 1, 0);
         const embed = new EmbedBuilder()
@@ -136,38 +162,9 @@ exports.commandBase = {
         const firstRow = new ActionRowBuilder().addComponents(pageInput);
         modal.addComponents(firstRow);
 
-        await i.showModal(modal);
+        i.showModal(modal);
 
-        const modalCollector = i.client.on("interactionCreate", async (modalInteraction) => {
-          if (!modalInteraction.isModalSubmit()) return;
-          if (modalInteraction.customId !== "change-page-modal") return;
-          if (modalInteraction.user.id !== i.user.id) return;
-
-          const page = parseInt(modalInteraction.fields.getTextInputValue("page-input"));
-          if (isNaN(page) || page < 1 || page > images.length) {
-            return modalInteraction.reply({
-              content: "Invalid page number.",
-              ephemeral: true,
-            });
-          }
-
-          const embed = new EmbedBuilder()
-            .setColor(0x0099FF)
-            .setImage(images[page - 1])
-            .setTimestamp()
-            .setFooter({
-              text: `Page ${page}`,
-              iconURL: interaction.user.displayAvatarURL()
-            });
-
-          i.update({
-            embeds: [embed],
-            components: [rows[page - 1]]
-          });
-          index = page - 1;
-
-          modalCollector.off("interactionCreate");
-        });
+        client.on("interactionCreate", modalCollector);
       }
     });
 
