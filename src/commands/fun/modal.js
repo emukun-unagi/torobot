@@ -1,4 +1,13 @@
-const { EmbedBuilder, PermissionsBitField, ActionRowBuilder, ButtonBuilder, ButtonStyle, ModalBuilder, TextInputBuilder, TextInputStyle } = require("discord.js");
+const {
+  ActionRowBuilder,
+  PermissionsBitField,
+  ButtonBuilder,
+  ButtonStyle,
+  ModalBuilder,
+  TextInputBuilder,
+  TextInputStyle,
+  EmbedBuilder,
+} = require("discord.js");
 const { SlashCommandBuilder } = require("@discordjs/builders");
 
 const images = [
@@ -61,7 +70,7 @@ for (let i = 0; i < images.length; i++) {
         .setCustomId(`change-page-${i}`)
         .setLabel("✏️")
         .setStyle(ButtonStyle.Secondary)
-    )
+    );
 
   rows.push(row);
 }
@@ -69,11 +78,9 @@ for (let i = 0; i < images.length; i++) {
 exports.commandBase = {
   prefixData: {
     name: "modal",
-    aliases: []
+    aliases: [],
   },
-  slashData: new SlashCommandBuilder()
-    .setName("modal")
-    .setDescription("modal command"),
+  slashData: new SlashCommandBuilder().setName("modal").setDescription("modal command"),
   cooldown: 5000,
   ownerOnly: false,
   slashRun: async (client, interaction) => {
@@ -227,5 +234,5 @@ exports.commandBase = {
         });
       });
     });
-  }
+  },
 };
