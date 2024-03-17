@@ -1,17 +1,20 @@
-const { EmbedBuilder, PermissionsBitField, ActionRowBuilder, ButtonBuilder, ButtonStyle, ModalBuilder, TextInputBuilder, TextInputStyle } = require("discord.js");
-const { SlashCommandBuilder } = require("@discordjs/builders");
+const {
+  EmbedBuilder,
+  PermissionsBitField,
+  ActionRowBuilder,
+  ButtonBuilder,
+  ButtonStyle,
+  ModalBuilder,
+  TextInputBuilder,
+  TextInputStyle
+} = require("discord.js");
+const {
+  SlashCommandBuilder
+} = require("@discordjs/builders");
 
 const images = [
-  "https://cdn.discordapp.com/attachments/1218427049866166293/1218529181885923368/IMG_7630.jpeg?ex=6607febc&is=65f589bc&hm=6a3a8dc4c7b120dcc5a2955af987a72f19f2b138cbe514cb1b842f79c93ae715&",
-  "https://cdn.discordapp.com/attachments/1218427049866166293/1218529181885923368/IMG_7630.jpeg?ex=6607febc&is=65f589bc&hm=6a3a8dc4c7b120dcc5a2955af987a72f19f2b138cbe514cb1b842f79c93ae715&",
-  "https://cdn.discordapp.com/attachments/1218427049866166293/1218529181885923368/IMG_7630.jpeg?ex=6607febc&is=65f589bc&hm=6a3a8dc4c7b120dcc5a2955af987a72f19f2b138cbe514cb1b842f79c93ae715&",
-  "https://cdn.discordapp.com/attachments/1218427049866166293/1218529181885923368/IMG_7630.jpeg?ex=6607febc&is=65f589bc&hm=6a3a8dc4c7b120dcc5a2955af987a72f19f2b138cbe514cb1b842f79c93ae715&",
-  "https://cdn.discordapp.com/attachments/1218427049866166293/1218529181885923368/IMG_7630.jpeg?ex=6607febc&is=65f589bc&hm=6a3a8dc4c7b120dcc5a2955af987a72f19f2b138cbe514cb1b842f79c93ae715&",
-  "https://cdn.discordapp.com/attachments/1218427049866166293/1218529181885923368/IMG_7630.jpeg?ex=6607febc&is=65f589bc&hm=6a3a8dc4c7b120dcc5a2955af987a72f19f2b138cbe514cb1b842f79c93ae715&",
-  "https://cdn.discordapp.com/attachments/1218427049866166293/1218529181885923368/IMG_7630.jpeg?ex=6607febc&is=65f589bc&hm=6a3a8dc4c7b120dcc5a2955af987a72f19f2b138cbe514cb1b842f79c93ae715&",
-  "https://cdn.discordapp.com/attachments/1218427049866166293/1218529181885923368/IMG_7630.jpeg?ex=6607febc&is=65f589bc&hm=6a3a8dc4c7b120dcc5a2955af987a72f19f2b138cbe514cb1b842f79c93ae715&",
-  "https://cdn.discordapp.com/attachments/1218427049866166293/1218529181885923368/IMG_7630.jpeg?ex=6607febc&is=65f589bc&hm=6a3a8dc4c7b120dcc5a2955af987a72f19f2b138cbe514cb1b842f79c93ae715&",
-  "https://cdn.discordapp.com/attachments/1218427049866166293/1218529181885923368/IMG_7630.jpeg?ex=6607febc&is=65f589bc&hm=6a3a8dc4c7b120dcc5a2955af987a72f19f2b138cbe514cb1b842f79c93ae715&",
+  "https://example.com/image1.png",
+  "https://example.com/image2.png"
 ];
 
 const rows = [];
@@ -32,8 +35,8 @@ for (let i = 0; i < images.length; i++) {
         .setDisabled(i === images.length - 1),
 
       new ButtonBuilder()
-        .setCustomId(`page-${i}`)
-        .setLabel("📄")
+        .setCustomId(`change-page-${i}`)
+        .setLabel("✏️")
         .setStyle(ButtonStyle.Secondary)
     )
 
@@ -57,13 +60,22 @@ exports.commandBase = {
       .setColor(0x0099FF)
       .setImage(images[index])
       .setTimestamp()
-      .setFooter({ text: `Page ${index + 1}`, iconURL: interaction.user.displayAvatarURL() });
+      .setFooter({
+        text: `Page ${index + 1}`,
+        iconURL: interaction.user.displayAvatarURL()
+      });
 
-    await interaction.reply({ embeds: [embed], components: [rows[index]] });
+    await interaction.reply({
+      embeds: [embed],
+      components: [rows[index]]
+    });
 
     const filter = (i) => i.user.id === interaction.user.id;
 
-    const collector = interaction.channel.createMessageComponentCollector({ filter, time: 60000 });
+    const collector = interaction.channel.createMessageComponentCollector({
+      filter,
+      time: 60000
+    });
 
     collector.on("collect", async (i) => {
       if (i.customId.startsWith("prev")) {
@@ -72,9 +84,15 @@ exports.commandBase = {
           .setColor(0x0099FF)
           .setImage(images[prevIndex])
           .setTimestamp()
-          .setFooter({ text: `Page ${prevIndex + 1}`, iconURL: interaction.user.displayAvatarURL() });
+          .setFooter({
+            text: `Page ${prevIndex + 1}`,
+            iconURL: interaction.user.displayAvatarURL()
+          });
 
-        i.update({ embeds: [embed], components: [rows[prevIndex]] });
+        i.update({
+          embeds: [embed],
+          components: [rows[prevIndex]]
+        });
         index = prevIndex;
       }
 
@@ -84,22 +102,64 @@ exports.commandBase = {
           .setColor(0x0099FF)
           .setImage(images[nextIndex])
           .setTimestamp()
-          .setFooter({ text: `Page ${nextIndex + 1}`, iconURL: interaction.user.displayAvatarURL() });
+          .setFooter({
+            text: `Page ${nextIndex + 1}`,
+            iconURL: interaction.user.displayAvatarURL()
+          });
 
-        i.update({ embeds: [embed], components: [rows[nextIndex]] });
+        i.update({
+          embeds: [embed],
+          components: [rows[nextIndex]]
+        });
         index = nextIndex;
       }
 
-      if (i.customId.startsWith("page-")) {
-        const pageIndex = parseInt(i.customId.split("-")[1]);
-        const embed = new EmbedBuilder()
-          .setColor(0x0099FF)
-          .setImage(images[pageIndex])
-          .setTimestamp()
-          .setFooter({ text: `Page ${pageIndex + 1}`, iconURL: interaction.user.displayAvatarURL() });
+      if (i.customId.startsWith("change-page")) {
+        const modal = new ModalBuilder()
+          .setCustomId("change-page-modal")
+          .setTitle("Change page");
 
-        await i.update({ embeds: [embed], components: [rows[pageIndex]] });
-        index = pageIndex;
+        const pageInput = new TextInputBuilder()
+          .setCustomId("page-input")
+          .setLabel("Enter the page number")
+          .setStyle(TextInputStyle.Short)
+          .setRequired(true);
+
+        const firstRow = new ActionRowBuilder().addComponents(pageInput);
+        modal.addComponents(firstRow);
+
+        await i.showModal(modal);
+
+        const modalCollector = i.client.on("interactionCreate", async (modalInteraction) => {
+          if (!modalInteraction.isModalSubmit()) return;
+          if (modalInteraction.customId !== "change-page-modal") return;
+          if (modalInteraction.user.id !== i.user.id) return;
+
+          const page = parseInt(modalInteraction.fields.getTextInputValue("page-input"));
+          if (isNaN(page) || page < 1 || page > images.length) {
+            return modalInteraction.reply({
+              content: "Invalid page number.",
+              ephemeral: true,
+            });
+          }
+
+          const embed = new EmbedBuilder()
+            .setColor(0x0099FF)
+            .setImage(images[page - 1])
+            .setTimestamp()
+            .setFooter({
+              text: `Page ${page}`,
+              iconURL: interaction.user.displayAvatarURL()
+            });
+
+          i.update({
+            embeds: [embed],
+            components: [rows[page - 1]]
+          });
+          index = page - 1;
+
+          modalCollector.off("interactionCreate");
+        });
       }
     });
 
@@ -107,4 +167,4 @@ exports.commandBase = {
       console.log(`Collected ${c.size} items`);
     });
   }
-}
+};
