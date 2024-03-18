@@ -1,12 +1,12 @@
 const {
-    ActionRowBuilder,
-    PermissionsBitField,
-    ButtonBuilder,
-    ButtonStyle,
-    ModalBuilder,
-    TextInputBuilder,
-    TextInputStyle,
-    EmbedBuilder,
+  ActionRowBuilder,
+  PermissionsBitField,
+  ButtonBuilder,
+  ButtonStyle,
+  ModalBuilder,
+  TextInputBuilder,
+  TextInputStyle,
+  EmbedBuilder,
 } = require("discord.js");
 const { SlashCommandBuilder } = require("@discordjs/builders");
 
@@ -52,189 +52,189 @@ const images = [
 const rows = [];
 
 for (let i = 0; i < images.length; i++) {
-    const row = new ActionRowBuilder()
-        .addComponents(
-            new ButtonBuilder()
-                .setCustomId(`prev-${i}`)
-                .setLabel("⬅️")
-                .setStyle(ButtonStyle.Secondary)
-                .setDisabled(i === 0),
+  const row = new ActionRowBuilder()
+    .addComponents(
+      new ButtonBuilder()
+        .setCustomId(`prev-${i}`)
+        .setLabel("⬅️")
+        .setStyle(ButtonStyle.Secondary)
+        .setDisabled(i === 0),
 
-            new ButtonBuilder()
-                .setCustomId(`next-${i}`)
-                .setLabel("➡️")
-                .setStyle(ButtonStyle.Secondary)
-                .setDisabled(i === images.length - 1),
+      new ButtonBuilder()
+        .setCustomId(`next-${i}`)
+        .setLabel("➡️")
+        .setStyle(ButtonStyle.Secondary)
+        .setDisabled(i === images.length - 1),
 
-            new ButtonBuilder()
-                .setCustomId(`change-page-${i}`)
-                .setLabel("✏️")
-                .setStyle(ButtonStyle.Secondary)
-        );
+      new ButtonBuilder()
+        .setCustomId(`change-page-${i}`)
+        .setLabel("✏️")
+        .setStyle(ButtonStyle.Secondary)
+    );
 
-    rows.push(row);
+  rows.push(row);
 }
 
 exports.commandBase = {
-    prefixData: {
-        name: "modal",
-        aliases: [],
-    },
-    slashData: new SlashCommandBuilder().setName("modal").setDescription("modal command"),
-    cooldown: 5000,
-    ownerOnly: false,
-    slashRun: async (client, interaction) => {
-        let index = parseInt(interaction.options.get("index")?.value || "0");
+  prefixData: {
+    name: "modal",
+    aliases: [],
+  },
+  slashData: new SlashCommandBuilder().setName("modal").setDescription("modal command"),
+  cooldown: 5000,
+  ownerOnly: false,
+  slashRun: async (client, interaction) => {
+    let index = parseInt(interaction.options.get("index")?.value || "0");
 
+    const embed = new EmbedBuilder()
+      .setColor(0xFFFFFF)
+      .setImage(images[index])
+      .setTimestamp()
+      .setFooter({
+        text: `Page ${index + 1}`,
+        iconURL: interaction.user.displayAvatarURL()
+      });
+
+    await interaction.reply({
+      embeds: [embed],
+      components: [rows[index]]
+    });
+
+    const filter = (i) => i.user.id === interaction.user.id;
+
+    const collector = interaction.channel.createMessageComponentCollector({
+      filter,
+      time: 0
+    });
+
+    let modalInteraction;
+    const modalCollector = (i) => {
+      if (!i.isModalSubmit()) return;
+      if (i.user.id !== interaction.user.id) return;
+
+      modalInteraction = i;
+
+      const page = parseInt(i.fields.getTextInputValue("page-input"));
+      if (isNaN(page) || page < 1 || page > images.length) {
+        return i.deferUpdate().then(() => {
+          i.followUp({
+            content: "無効なページです",
+            ephemeral: true
+          });
+        });
+      }
+
+      index = page - 1;
+
+      const embed = new EmbedBuilder()
+        .setColor(0xFFFFFF)
+        .setImage(images[index])
+        .setTimestamp()
+        .setFooter({
+          text: `Page ${index + 1}`,
+          iconURL: interaction.user.displayAvatarURL()
+        });
+
+      i.deferUpdate().then(() => {
+        i.editReply({
+          embeds: [embed],
+          components: [rows[index]]
+        });
+
+        collector.stop();
+
+        i.followUp({
+          content: "ページを変更しました" + (index + 1),
+          ephemeral: true
+        });
+
+        rows[index].components.forEach((component) => {
+          if (component.setDisabled) {
+            component.setDisabled(false);
+          }
+        });
+      });
+    };
+
+    collector.on("collect", (i) => {
+      if (i.customId.startsWith("prev")) {
+        const prevIndex = Math.max(index - 1, 0);
         const embed = new EmbedBuilder()
-            .setColor(0xFFFFFF)
-            .setImage(images[index])
-            .setTimestamp()
-            .setFooter({
-                text: `Page ${index + 1}`,
-                iconURL: interaction.user.displayAvatarURL()
-            });
+          .setColor(0xFFFFFF)
+          .setImage(images[prevIndex])
+          .setTimestamp()
+          .setFooter({
+            text: `Page ${prevIndex + 1}`,
+            iconURL: interaction.user.displayAvatarURL()
+          });
 
-        await interaction.reply({
-            embeds: [embed],
-            components: [rows[index]]
+        i.update({
+          embeds: [embed],
+          components: [rows[prevIndex]]
         });
+        index = prevIndex;
 
-        const filter = (i) => i.user.id === interaction.user.id;
-
-        const collector = interaction.channel.createMessageComponentCollector({
-            filter,
-            time: 0
+        rows[prevIndex].components.forEach((component) => {
+          if (component.setDisabled) {
+            component.setDisabled(false);
+          }
         });
+      }
 
-        let modalInteraction;
-        const modalCollector = (i) => {
-            if (!i.isModalSubmit()) return;
-            if (i.user.id !== interaction.user.id) return;
+      if (i.customId.startsWith("next")) {
+        const nextIndex = Math.min(index + 1, images.length - 1);
+        const embed = new EmbedBuilder()
+          .setColor(0xFFFFFF)
+          .setImage(images[nextIndex])
+          .setTimestamp()
+          .setFooter({
+            text: `Page ${nextIndex + 1}`,
+            iconURL: interaction.user.displayAvatarURL()
+          });
 
-            modalInteraction = i;
-
-            const page = parseInt(i.fields.getTextInputValue("page-input"));
-            if (isNaN(page) || page < 1 || page > images.length) {
-                return i.deferUpdate().then(() => {
-                    i.followUp({
-                        content: "無効なページです",
-                        ephemeral: true
-                    });
-                });
-            }
-
-            index = page - 1;
-
-            const embed = new EmbedBuilder()
-                .setColor(0xFFFFFF)
-                .setImage(images[index])
-                .setTimestamp()
-                .setFooter({
-                    text: `Page ${index + 1}`,
-                    iconURL: interaction.user.displayAvatarURL()
-                });
-
-            i.deferUpdate().then(() => {
-                i.editReply({
-                    embeds: [embed],
-                    components: [rows[index]]
-                });
-
-                collector.stop();
-
-                i.followUp({
-                    content: "ページを変更しました" + (index + 1),
-                    ephemeral: true
-                });
-
-                rows[index].components.forEach((component) => {
-                    if (component.setDisabled) {
-                        component.setDisabled(false);
-                    }
-                });
-            });
-        };
-
-        collector.on("collect", (i) => {
-            if (i.customId.startsWith("prev")) {
-                const prevIndex = Math.max(index - 1, 0);
-                const embed = new EmbedBuilder()
-                    .setColor(0xFFFFFF)
-                    .setImage(images[prevIndex])
-                    .setTimestamp()
-                    .setFooter({
-                        text: `Page ${prevIndex + 1}`,
-                        iconURL: interaction.user.displayAvatarURL()
-                    });
-
-                i.update({
-                    embeds: [embed],
-                    components: [rows[prevIndex]]
-                });
-                index = prevIndex;
-
-                rows[prevIndex].components.forEach((component) => {
-                    if (component.setDisabled) {
-                        component.setDisabled(false);
-                    }
-                });
-            }
-
-            if (i.customId.startsWith("next")) {
-                const nextIndex = Math.min(index + 1, images.length - 1);
-                const embed = new EmbedBuilder()
-                    .setColor(0xFFFFFF)
-                    .setImage(images[nextIndex])
-                    .setTimestamp()
-                    .setFooter({
-                        text: `Page ${nextIndex + 1}`,
-                        iconURL: interaction.user.displayAvatarURL()
-                    });
-
-                i.update({
-                    embeds: [embed],
-                    components: [rows[nextIndex]]
-                });
-                index = nextIndex;
-
-                rows[nextIndex].components.forEach((component) => {
-                    if (component.setDisabled) {
-                        component.setDisabled(false);
-                    }
-                });
-            }
-
-            if (i.customId.startsWith("change-page")) {
-                const modal = new ModalBuilder()
-                    .setCustomId("change-page-modal")
-                    .setTitle("ページ変更");
-
-                const pageInput = new TextInputBuilder()
-                    .setCustomId("page-input")
-                    .setLabel("ページを入力 (1~" + images.length + ")")
-                    .setStyle(TextInputStyle.Short)
-                    .setRequired(true);
-
-                const firstRow = new ActionRowBuilder().addComponents(pageInput);
-                modal.addComponents(firstRow);
-
-                i.showModal(modal);
-
-                client.on("interactionCreate", modalCollector);
-            }
+        i.update({
+          embeds: [embed],
+          components: [rows[nextIndex]]
         });
+        index = nextIndex;
 
-        collector.on("end", () => {
-            client.off("interactionCreate", modalCollector);
-
-            rows.forEach((row) => {
-                row.components.forEach((component) => {
-                    if (component.setDisabled) {
-                        component.setDisabled(false);
-                    }
-                });
-            });
+        rows[nextIndex].components.forEach((component) => {
+          if (component.setDisabled) {
+            component.setDisabled(false);
+          }
         });
-    },
+      }
+
+      if (i.customId.startsWith("change-page")) {
+        const modal = new ModalBuilder()
+          .setCustomId("change-page-modal")
+          .setTitle("ページ変更");
+
+        const pageInput = new TextInputBuilder()
+          .setCustomId("page-input")
+          .setLabel("ページを入力 (1~" + images.length + ")")
+          .setStyle(TextInputStyle.Short)
+          .setRequired(true);
+
+        const firstRow = new ActionRowBuilder().addComponents(pageInput);
+        modal.addComponents(firstRow);
+
+        i.showModal(modal);
+
+        client.on("interactionCreate", modalCollector);
+      }
+    });
+
+    collector.on("end", () => {
+      client.off("interactionCreate", modalCollector);
+
+      rows.forEach((row) => {
+        row.components.forEach((component) => {
+          if (component.setDisabled) {
+            component.setDisabled(false);
+          }
+        });
+      });
+    });
+  },
 };
