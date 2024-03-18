@@ -118,36 +118,35 @@ exports.commandBase = {
       if (isNaN(page) || page < 1 || page > images.length) {
         return i.deferUpdate().then(() => {
           i.followUp({
-            content: "Invalid page",
+            content: "無効なページです",
             ephemeral: true
           });
         });
       }
 
-      index = page - 1;
       const embed = new EmbedBuilder()
         .setColor(0xFFFFFF)
-        .setImage(images[index])
+        .setImage(images[page - 1])
         .setTimestamp()
         .setFooter({
-          text: `Page ${index + 1}`,
+          text: `Page ${page}`,
           iconURL: interaction.user.displayAvatarURL()
         });
 
       i.deferUpdate().then(() => {
         i.editReply({
           embeds: [embed],
-          components: [rows[index]]
+          components: [rows[page - 1]]
         });
 
         collector.stop();
 
         i.followUp({
-          content: `Page changed to ${page}`,
+          content: "ページを変更しました" + page,
           ephemeral: true
         });
 
-        rows[index].components.forEach((component) => {
+        rows[page - 1].components.forEach((component) => {
           if (component.setDisabled) {
             component.setDisabled(false);
           }
@@ -157,25 +156,22 @@ exports.commandBase = {
 
     collector.on("collect", (i) => {
       if (i.customId.startsWith("prev")) {
-        const prevIndex = Math.max(index - 1, 0);
-
+        index = Math.max(index - 1, 0);
         const embed = new EmbedBuilder()
           .setColor(0xFFFFFF)
-          .setImage(images[prevIndex])
+          .setImage(images[index])
           .setTimestamp()
           .setFooter({
-            text: `Page ${prevIndex + 1}`,
+            text: `Page ${index + 1}`,
             iconURL: interaction.user.displayAvatarURL()
           });
 
         i.update({
           embeds: [embed],
-          components: [rows[prevIndex]]
+          components: [rows[index]]
         });
 
-        index = prevIndex;
-
-        rows[prevIndex].components.forEach((component) => {
+        rows[index].components.forEach((component) => {
           if (component.setDisabled) {
             component.setDisabled(false);
           }
@@ -183,25 +179,22 @@ exports.commandBase = {
       }
 
       if (i.customId.startsWith("next")) {
-        const nextIndex = Math.min(index + 1, images.length - 1);
-
+        index = Math.min(index + 1, images.length - 1);
         const embed = new EmbedBuilder()
           .setColor(0xFFFFFF)
-          .setImage(images[nextIndex])
+          .setImage(images[index])
           .setTimestamp()
           .setFooter({
-            text: `Page ${nextIndex + 1}`,
+            text: `Page ${index + 1}`,
             iconURL: interaction.user.displayAvatarURL()
           });
 
         i.update({
           embeds: [embed],
-          components: [rows[nextIndex]]
+          components: [rows[index]]
         });
 
-        index = nextIndex;
-
-        rows[nextIndex].components.forEach((component) => {
+        rows[index].components.forEach((component) => {
           if (component.setDisabled) {
             component.setDisabled(false);
           }
@@ -211,11 +204,11 @@ exports.commandBase = {
       if (i.customId.startsWith("change-page")) {
         const modal = new ModalBuilder()
           .setCustomId("change-page-modal")
-          .setTitle("Page Change");
+          .setTitle("ページ変更");
 
         const pageInput = new TextInputBuilder()
           .setCustomId("page-input")
-          .setLabel("Enter page number")
+          .setLabel("ページを入力")
           .setStyle(TextInputStyle.Short)
           .setRequired(true);
 
