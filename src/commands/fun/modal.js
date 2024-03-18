@@ -141,16 +141,19 @@ exports.commandBase = {
 
         collector.stop();
 
-        i.followUp({
-          content: "ページを変更しました" + page,
-          ephemeral: true
-        });
+        // ここで、collector を再実行する
+        collector.reset();
 
         rows[page - 1].components.forEach((component) => {
           if (component.setDisabled) {
             component.setDisabled(false);
           }
         });
+      });
+
+      i.followUp({
+        content: "ページを変更しました" + page,
+        ephemeral: true
       });
     };
 
