@@ -118,48 +118,47 @@ exports.commandBase = {
       if (isNaN(page) || page < 1 || page > images.length) {
         return i.deferUpdate().then(() => {
           i.followUp({
-            content: "無効なページです",
+            content: "Invalid page",
             ephemeral: true
           });
         });
       }
 
+      index = page - 1;
       const embed = new EmbedBuilder()
         .setColor(0xFFFFFF)
-        .setImage(images[page - 1])
+        .setImage(images[index])
         .setTimestamp()
         .setFooter({
-          text: `Page ${page}`,
+          text: `Page ${index + 1}`,
           iconURL: interaction.user.displayAvatarURL()
         });
 
       i.deferUpdate().then(() => {
         i.editReply({
           embeds: [embed],
-          components: [rows[page - 1]]
+          components: [rows[index]]
         });
 
         collector.stop();
 
-        // ここで、collector を再実行する
-        collector.reset();
+        i.followUp({
+          content: `Page changed to ${page}`,
+          ephemeral: true
+        });
 
-        rows[page - 1].components.forEach((component) => {
+        rows[index].components.forEach((component) => {
           if (component.setDisabled) {
             component.setDisabled(false);
           }
         });
-      });
-
-      i.followUp({
-        content: "ページを変更しました" + page,
-        ephemeral: true
       });
     };
 
     collector.on("collect", (i) => {
       if (i.customId.startsWith("prev")) {
         const prevIndex = Math.max(index - 1, 0);
+
         const embed = new EmbedBuilder()
           .setColor(0xFFFFFF)
           .setImage(images[prevIndex])
@@ -173,6 +172,7 @@ exports.commandBase = {
           embeds: [embed],
           components: [rows[prevIndex]]
         });
+
         index = prevIndex;
 
         rows[prevIndex].components.forEach((component) => {
@@ -184,6 +184,7 @@ exports.commandBase = {
 
       if (i.customId.startsWith("next")) {
         const nextIndex = Math.min(index + 1, images.length - 1);
+
         const embed = new EmbedBuilder()
           .setColor(0xFFFFFF)
           .setImage(images[nextIndex])
@@ -197,6 +198,7 @@ exports.commandBase = {
           embeds: [embed],
           components: [rows[nextIndex]]
         });
+
         index = nextIndex;
 
         rows[nextIndex].components.forEach((component) => {
@@ -209,11 +211,11 @@ exports.commandBase = {
       if (i.customId.startsWith("change-page")) {
         const modal = new ModalBuilder()
           .setCustomId("change-page-modal")
-          .setTitle("ページ変更");
+          .setTitle("Page Change");
 
         const pageInput = new TextInputBuilder()
           .setCustomId("page-input")
-          .setLabel("ページを入力")
+          .setLabel("Enter page number")
           .setStyle(TextInputStyle.Short)
           .setRequired(true);
 
