@@ -212,7 +212,7 @@ exports.commandBase = {
 
                 const pageInput = new TextInputBuilder()
                     .setCustomId("page-input")
-                    .setLabel("ページを入力")
+                    .setLabel("ページを入力 (1~" + images.length + ")")
                     .setStyle(TextInputStyle.Short)
                     .setRequired(true);
 
